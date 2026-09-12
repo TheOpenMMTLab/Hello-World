@@ -1,0 +1,20 @@
+{
+  "queries": [
+    {
+      "formula": "A[] not deadlock",
+      "comment": "Pfad 'Cas nominal' des Szenarios 'Vehicle blocked on the track' muss deadlockfrei abspielbar sein."
+    },
+    {
+      "formula": "A[] road_vehicle_crossing imply !departure_allowed",
+      "comment": "Wenn ein Fahrzeug den Bahnübergang überquert, darf die Abfahrt des Zuges nicht erlaubt sein."
+    },
+    {
+      "formula": "A[] !departure_allowed || !road_vehicle_crossing",
+      "comment": "Es gilt immer, dass entweder die Abfahrt des Zuges nicht erlaubt ist oder kein Fahrzeug den Bahnübergang überquert."
+    },
+    {
+      "formula": "A[] not (train_crossing && road_vehicle_crossing)",
+      "comment": "Es gilt immer, dass Zug und Fahrzeug nicht gleichzeitig den Bahnübergang überqueren."
+    }
+  ]
+}
