@@ -59,11 +59,19 @@ Verifikation der erzeugten `.xml` mit dem UPPAAL-Image `frittenburger/uppaal:dev
 (enthält `verifyta` unter `/root/uppaal-5.1.0-beta5-linux64/bin/verifyta`):
 
 ```bash
+source ../uppaal/data/licence.env 
+```
+
+```bash
 MSYS_NO_PATHCONV=1 docker run --rm \
   -v ./tmp:/share/models \
-  --entrypoint /root/uppaal-5.1.0-beta5-linux64/bin/verifyta \
-  frittenburger/uppaal:dev \
-  /share/models/vehicle_blocked_on_the_track__cas_de_blocage_sur_la_voie.xml
+  frittenburger/uppaal:dev ./run.sh $UPPAAL_LICENCE_KEY \
+  /share/models/vehicle_blocked_on_the_track__cas_de_blocage_sur_la_voie.xml \
+  /share/models/vehicle_blocked_on_the_track__cas_de_blocage_sur_la_voie.log
+```
+
+```bash
+cat tmp/vehicle_blocked_on_the_track__cas_de_blocage_sur_la_voie.log
 ```
 
 Jede erzeugte Datei enthält bereits eine eingebettete Standard-Query
