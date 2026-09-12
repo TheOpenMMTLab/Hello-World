@@ -79,3 +79,10 @@ Jede erzeugte Datei enthält bereits eine eingebettete Standard-Query
 
 Hinweis: Ein leeres `<queries/>`-Element im XML wird von diesem Image nicht akzeptiert;
 der Generator lässt das Element deshalb weg, wenn keine Queries vorhanden sind.
+
+
+## docker image
+
+```bash
+docker build -t frittenburger/capella-to-uppaal:dev .
+```

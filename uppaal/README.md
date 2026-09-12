@@ -28,5 +28,5 @@ Containerlauf:
 
 ```bash
 source data/licence.env
-MSYS_NO_PATHCONV=1 docker run --rm -v $(pwd)/data:/share/models frittenburger/uppaal:dev ./run.sh $UPPAAL_LICENCE_KEY /share/models/block_signal_model.xml /share/models/block_signal_model_output.log
+MSYS_NO_PATHCONV=1 docker run --rm -e UPPAAL_LICENCE_KEY="$UPPAAL_LICENCE_KEY" -v $(pwd)/data:/share/models frittenburger/uppaal:dev ./run.sh /share/models/block_signal_model.xml /share/models/block_signal_model_output.log
 ```

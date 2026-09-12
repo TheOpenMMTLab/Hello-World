@@ -1,0 +1,150 @@
+@prefix MMUT: <http://frittenburger.de/ontology/mmut#> .
+@prefix helloworld: <http://hpi.de/hello-world-mbse#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+helloworld:BinaryMicroModel-Capella-System-Model a MMUT:BinaryMicroModel ;
+    rdfs:label "Capella System Model"^^xsd:string ;
+    MMUT:hasTaskDefinition helloworld:TaskDefinition-UNZIP-Capella-System-Model ;
+    MMUT:isInputModelOf helloworld:PythonScriptTransformation-a ;
+    rdfs:comment "System Engineering model (Capella)"^^xsd:string .
+
+helloworld:BinaryMicroModel-Safety-Conditions-Mapping-for-UPPAAL a MMUT:BinaryMicroModel ;
+    rdfs:label "Safety Conditions Mapping for UPPAAL"^^xsd:string ;
+    MMUT:hasTaskDefinition helloworld:TaskDefinition-Load-Safety-Conditions-Mapping-for-UPPAAL-from-Git ;
+    MMUT:isInputModelOf helloworld:PythonScriptTransformation-a ;
+    rdfs:comment "Safety conditions captured as UPPAAL q Format configured in JSON"^^xsd:string .
+
+helloworld:BinaryMicroModel-UPPAAL-Input-Model a MMUT:BinaryMicroModel ;
+    rdfs:label "UPPAAL Input Model"^^xsd:string ;
+    MMUT:hasTaskDefinition helloworld:TaskDefinition-Dummy-Load-UPPAAL-Input-Model ;
+    MMUT:isInputModelOf helloworld:PythonScriptTransformation-b ;
+    rdfs:comment "Generated UPPAAL model and query assets"^^xsd:string .
+
+helloworld:BinaryMicroModel-UPPAAL-Report a MMUT:BinaryMicroModel ;
+    rdfs:label "UPPAAL Report"^^xsd:string ;
+    MMUT:hasTaskDefinition helloworld:TaskDefinition-Dummy-Load-UPPAAL-Report ;
+    rdfs:comment "Validation result report from UPPAAL"^^xsd:string .
+
+helloworld:ContainerProperties-Container-properties-for-CAPELLA_TO_UPPAAL-a a MMUT:ContainerProperties ;
+    rdfs:label "Container properties for CAPELLA_TO_UPPAAL a"^^xsd:string ;
+    MMUT:hasCommandSequence [ a rdf:Seq ;
+            rdf:_1 "--component"^^xsd:string ;
+            rdf:_2 "Safety command control"^^xsd:string ;
+            rdf:_3 "--model"^^xsd:string ;
+            rdf:_4 "{{resolve:system:modelpath}}capella/Level Crossing Traffic Control/Level Crossing Traffic Control.capella"^^xsd:string ;
+            rdf:_5 "--output"^^xsd:string ;
+            rdf:_6 "{{resolve:system:modelpath}}/"^^xsd:string ] ;
+    MMUT:hasEnvironment helloworld:Environment-Environment-for-CAPELLA_TO_UPPAAL-a ;
+    MMUT:image "frittenburger/capella-to-uppaal:dev"^^xsd:string .
+
+helloworld:ContainerProperties-Container-properties-for-Dummy-Load-UPPAAL-Input-Model a MMUT:ContainerProperties ;
+    rdfs:label "Container properties for Dummy Load UPPAAL Input Model"^^xsd:string ;
+    MMUT:hasCommandSequence [ a rdf:Seq ;
+            rdf:_1 "echo"^^xsd:string ;
+            rdf:_2 "load UPPAAL Input Model"^^xsd:string ] ;
+    MMUT:hasEnvironment helloworld:Environment-Environment-for-Dummy-Load-UPPAAL-Input-Model ;
+    MMUT:image "frittenburger/simple-mut:dev"^^xsd:string .
+
+helloworld:ContainerProperties-Container-properties-for-Dummy-Load-UPPAAL-Report a MMUT:ContainerProperties ;
+    rdfs:label "Container properties for Dummy Load UPPAAL Report"^^xsd:string ;
+    MMUT:hasCommandSequence [ a rdf:Seq ;
+            rdf:_1 "echo"^^xsd:string ;
+            rdf:_2 "load UPPAAL Report"^^xsd:string ] ;
+    MMUT:hasEnvironment helloworld:Environment-Environment-for-Dummy-Load-UPPAAL-Report ;
+    MMUT:image "frittenburger/simple-mut:dev"^^xsd:string .
+
+helloworld:ContainerProperties-Container-properties-for-Load-Safety-Conditions-Mapping-for-UPPAAL-from-Git a MMUT:ContainerProperties ;
+    rdfs:label "Container properties for Load Safety Conditions Mapping for UPPAAL from Git"^^xsd:string ;
+    MMUT:hasCommandSequence [ a rdf:Seq ;
+            rdf:_1 "./get.sh"^^xsd:string ;
+            rdf:_2 "--repo"^^xsd:string ;
+            rdf:_3 "https://github.com/TheOpenMMTLab/Hello-World.git"^^xsd:string ;
+            rdf:_4 "--input-path"^^xsd:string ;
+            rdf:_5 "capella-to-uppaal/src/level_crossing_queries.json"^^xsd:string ;
+            rdf:_6 "--output-path"^^xsd:string ;
+            rdf:_7 "{{resolve:system:modelpath}}safety_conditions.json"^^xsd:string ;
+            rdf:_8 "--ref"^^xsd:string ;
+            rdf:_9 "main"^^xsd:string ] ;
+    MMUT:hasEnvironment helloworld:Environment-Environment-for-Load-Safety-Conditions-Mapping-for-UPPAAL-from-Git ;
+    MMUT:image "frittenburger/git-adapter:dev"^^xsd:string .
+
+helloworld:ContainerProperties-Container-properties-for-UNZIP-Capella-System-Model a MMUT:ContainerProperties ;
+    rdfs:label "Container properties for UNZIP Capella System Model"^^xsd:string ;
+    MMUT:hasCommandSequence [ a rdf:Seq ;
+            rdf:_1 "https://mirror1.hs-esslingen.de/Mirrors/eclipse//capella/samples/7.1.0/LevelCrossingTrafficControl.zip"^^xsd:string ;
+            rdf:_2 "{{resolve:system:modelpath}}capella"^^xsd:string ] ;
+    MMUT:hasEnvironment helloworld:Environment-Environment-for-UNZIP-Capella-System-Model ;
+    MMUT:image "frittenburger/zip-downloader:dev"^^xsd:string .
+
+helloworld:ContainerProperties-Container-properties-for-UPPAAL_VERIFY-b a MMUT:ContainerProperties ;
+    rdfs:label "Container properties for UPPAAL_VERIFY b"^^xsd:string ;
+    MMUT:hasCommandSequence [ a rdf:Seq ;
+            rdf:_1 "bash"^^xsd:string ;
+            rdf:_2 "/root/run.sh"^^xsd:string ;
+            rdf:_3 "{{resolve:system:modelpath}}vehicle_blocked_on_the_track__cas_de_blocage_sur_la_voie.xml"^^xsd:string ;
+            rdf:_4 "{{resolve:system:modelpath}}uppaal-report.txt"^^xsd:string ] ;
+    MMUT:hasEnvironment helloworld:Environment-Environment-for-UPPAAL_VERIFY-b ;
+    MMUT:image "frittenburger/uppaal:dev"^^xsd:string .
+
+helloworld:Environment-Environment-for-CAPELLA_TO_UPPAAL-a a MMUT:Environment ;
+    rdfs:label "Environment for CAPELLA_TO_UPPAAL a"^^xsd:string .
+
+helloworld:Environment-Environment-for-Dummy-Load-UPPAAL-Input-Model a MMUT:Environment ;
+    rdfs:label "Environment for Dummy Load UPPAAL Input Model"^^xsd:string .
+
+helloworld:Environment-Environment-for-Dummy-Load-UPPAAL-Report a MMUT:Environment ;
+    rdfs:label "Environment for Dummy Load UPPAAL Report"^^xsd:string .
+
+helloworld:Environment-Environment-for-Load-Safety-Conditions-Mapping-for-UPPAAL-from-Git a MMUT:Environment ;
+    rdfs:label "Environment for Load Safety Conditions Mapping for UPPAAL from Git"^^xsd:string .
+
+helloworld:Environment-Environment-for-UNZIP-Capella-System-Model a MMUT:Environment ;
+    rdfs:label "Environment for UNZIP Capella System Model"^^xsd:string .
+
+helloworld:Environment-Environment-for-UPPAAL_VERIFY-b a MMUT:Environment ;
+    rdfs:label "Environment for UPPAAL_VERIFY b"^^xsd:string ;
+    MMUT:hasKeyValuePair <http://hpi.de/hello-world-mbse#KeyValuePair-EnvironmentKey-UPPAAL_VERIFY-b/UPPAAL_LICENCE_KEY> .
+
+<http://hpi.de/hello-world-mbse#KeyValuePair-EnvironmentKey-UPPAAL_VERIFY-b/UPPAAL_LICENCE_KEY> a MMUT:KeyValuePair ;
+    rdfs:label "EnvironmentKey UPPAAL_VERIFY b/UPPAAL_LICENCE_KEY"^^xsd:string ;
+    MMUT:key "UPPAAL_LICENCE_KEY"^^xsd:string ;
+    MMUT:value "{{resolve:secrets:uppaal:key}}"^^xsd:string .
+
+helloworld:PythonScriptTransformation-b a MMUT:PythonScriptTransformation ;
+    rdfs:label "b"^^xsd:string ;
+    MMUT:hasOutputModel helloworld:BinaryMicroModel-UPPAAL-Report ;
+    MMUT:hasTaskDefinition helloworld:TaskDefinition-UPPAAL_VERIFY-b ;
+    rdfs:comment "Validate state machine with UPPAAL queries"^^xsd:string .
+
+helloworld:TaskDefinition-CAPELLA_TO_UPPAAL-a a MMUT:TaskDefinition ;
+    rdfs:label "CAPELLA_TO_UPPAAL a"^^xsd:string ;
+    MMUT:hasContainerProperties helloworld:ContainerProperties-Container-properties-for-CAPELLA_TO_UPPAAL-a .
+
+helloworld:TaskDefinition-Dummy-Load-UPPAAL-Input-Model a MMUT:TaskDefinition ;
+    rdfs:label "Dummy Load UPPAAL Input Model"^^xsd:string ;
+    MMUT:hasContainerProperties helloworld:ContainerProperties-Container-properties-for-Dummy-Load-UPPAAL-Input-Model .
+
+helloworld:TaskDefinition-Dummy-Load-UPPAAL-Report a MMUT:TaskDefinition ;
+    rdfs:label "Dummy Load UPPAAL Report"^^xsd:string ;
+    MMUT:hasContainerProperties helloworld:ContainerProperties-Container-properties-for-Dummy-Load-UPPAAL-Report .
+
+helloworld:TaskDefinition-Load-Safety-Conditions-Mapping-for-UPPAAL-from-Git a MMUT:TaskDefinition ;
+    rdfs:label "Load Safety Conditions Mapping for UPPAAL from Git"^^xsd:string ;
+    MMUT:hasContainerProperties helloworld:ContainerProperties-Container-properties-for-Load-Safety-Conditions-Mapping-for-UPPAAL-from-Git .
+
+helloworld:TaskDefinition-UNZIP-Capella-System-Model a MMUT:TaskDefinition ;
+    rdfs:label "UNZIP Capella System Model"^^xsd:string ;
+    MMUT:hasContainerProperties helloworld:ContainerProperties-Container-properties-for-UNZIP-Capella-System-Model .
+
+helloworld:TaskDefinition-UPPAAL_VERIFY-b a MMUT:TaskDefinition ;
+    rdfs:label "UPPAAL_VERIFY b"^^xsd:string ;
+    MMUT:hasContainerProperties helloworld:ContainerProperties-Container-properties-for-UPPAAL_VERIFY-b .
+
+helloworld:PythonScriptTransformation-a a MMUT:PythonScriptTransformation ;
+    rdfs:label "a"^^xsd:string ;
+    MMUT:hasOutputModel helloworld:BinaryMicroModel-UPPAAL-Input-Model ;
+    MMUT:hasTaskDefinition helloworld:TaskDefinition-CAPELLA_TO_UPPAAL-a ;
+    rdfs:comment "Generate UPPAALassets from capella model"^^xsd:string .
+
