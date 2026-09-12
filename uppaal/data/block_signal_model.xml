@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.6//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_6.dtd'>
+<nta>
+	<declaration>
+//Uhr
+clock t;
+
+//Signal Aspekte
+bool signal_hp0 = false;
+bool signal_hp1 = false;
+bool signal_hp2 = false;
+
+// Block Zustaende
+bool block_free = false;
+bool block_occupied = false;
+
+//Achszaehler Variablen
+int count_in = 0;
+int count_out = 0;
+
+//Kommando für die Signale
+chan cmd_hp1;
+chan cmd_hp0;
+
+
+// Achs Sensoren Inputs
+chan axle_impuls_in;
+chan axle_impuls_out;
+
+</declaration>
+	<template>
+		<name>Achszaehler</name>
+		<parameter>int &amp;cnt, chan &amp;axle_impuls</parameter>
+		<location id="id0" x="-204" y="-51">
+		</location>
+		<init ref="id0"/>
+		<transition id="id1">
+			<source ref="id0"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-127" y="-76">axle_impuls?</label>
+			<label kind="assignment" x="-127" y="-51">cnt++</label>
+			<nail x="-136" y="-93"/>
+			<nail x="-144" y="8"/>
+		</transition>
+	</template>
+	<template>
+		<name>TestTreiber</name>
+		<parameter>int axle_cnt, int trains_cnt</parameter>
+		<declaration>int axle = 0;
+int trains = 0;</declaration>
+		<location id="id2" x="-553" y="102">
+			<name x="-562" y="127">S0</name>
+		</location>
+		<location id="id3" x="-340" y="102">
+			<name x="-349" y="127">S1</name>
+		</location>
+		<location id="id4" x="-153" y="102">
+			<name x="-163" y="68">S2</name>
+		</location>
+		<location id="id5" x="34" y="102">
+			<name x="24" y="68">S3</name>
+		</location>
+		<location id="id6" x="229" y="102">
+			<name x="219" y="68">S4</name>
+		</location>
+		<location id="id7" x="-501" y="-25">
+			<name x="-511" y="-59">Done</name>
+		</location>
+		<init ref="id2"/>
+		<transition id="id8">
+			<source ref="id2"/>
+			<target ref="id7"/>
+			<label kind="guard" x="-620" y="8">trains &gt;= trains_cnt</label>
+		</transition>
+		<transition id="id9">
+			<source ref="id6"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-7" y="131">axle == 0</label>
+			<nail x="-25" y="229"/>
+			<nail x="-408" y="229"/>
+		</transition>
+		<transition id="id10">
+			<source ref="id6"/>
+			<target ref="id5"/>
+			<label kind="guard" x="51" y="17">axle &gt; 0</label>
+			<label kind="assignment" x="51" y="42">axle--</label>
+			<nail x="169" y="30"/>
+		</transition>
+		<transition id="id11">
+			<source ref="id5"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="52" y="85">axle_impuls_out!</label>
+		</transition>
+		<transition id="id12">
+			<source ref="id4"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-238" y="-17">axle &gt; 0</label>
+			<label kind="assignment" x="-238" y="0">axle--</label>
+			<nail x="-238" y="34"/>
+		</transition>
+		<transition id="id13">
+			<source ref="id4"/>
+			<target ref="id5"/>
+			<label kind="guard" x="-102" y="76">axle == 0</label>
+			<label kind="assignment" x="-102" y="102">axle = axle_cnt</label>
+		</transition>
+		<transition id="id14">
+			<source ref="id3"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="-322" y="85">axle_impuls_in!</label>
+		</transition>
+		<transition id="id15">
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-493" y="68">signal_hp1 &amp;&amp; trains &lt; trains_cnt</label>
+			<label kind="assignment" x="-484" y="110">axle = axle_cnt, trains++</label>
+		</transition>
+	</template>
+	<template>
+		<name>Auswerteeinheit</name>
+		<location id="id16" x="-161" y="-59">
+			<name x="-171" y="-93">Occupied</name>
+		</location>
+		<location id="id17" x="161" y="0">
+			<name x="151" y="-34">Free</name>
+		</location>
+		<location id="id18" x="-68" y="93">
+			<name x="-74" y="118">Error</name>
+		</location>
+		<init ref="id16"/>
+		<transition id="id19">
+			<source ref="id16"/>
+			<target ref="id17"/>
+			<label kind="guard" x="42" y="-85">count_in == count_out</label>
+			<label kind="synchronisation" x="59" y="-76">cmd_hp1!</label>
+			<label kind="assignment" x="59" y="-59">block_free = true, block_occupied = false</label>
+			<nail x="-34" y="-51"/>
+		</transition>
+		<transition id="id20">
+			<source ref="id17"/>
+			<target ref="id16"/>
+			<label kind="guard" x="-272" y="-8">count_in &gt; count_out</label>
+			<label kind="synchronisation" x="-357" y="0">cmd_hp0!</label>
+			<label kind="assignment" x="-357" y="17">block_free = false, block_occupied = true</label>
+			<nail x="17" y="25"/>
+		</transition>
+		<transition id="id21">
+			<source ref="id17"/>
+			<target ref="id18"/>
+			<label kind="guard" x="-8" y="68">count_in &lt; count_out</label>
+			<label kind="synchronisation" x="-8" y="76">cmd_hp0!</label>
+			<label kind="assignment" x="-8" y="85">block_free = false, block_occupied = true</label>
+			<nail x="0" y="68"/>
+		</transition>
+	</template>
+	<template>
+		<name>Signal</name>
+		<location id="id22" x="-195" y="-51">
+			<name x="-205" y="-85">HP0</name>
+		</location>
+		<location id="id23" x="-25" y="-51">
+			<name x="-35" y="-85">HP1</name>
+		</location>
+		<init ref="id22"/>
+		<transition id="id24">
+			<source ref="id23"/>
+			<target ref="id22"/>
+			<label kind="synchronisation" x="-170" y="8">cmd_hp0?</label>
+			<label kind="assignment" x="-170" y="-8">signal_hp1 = false, signal_hp0 = true</label>
+			<nail x="-102" y="-25"/>
+		</transition>
+		<transition id="id25">
+			<source ref="id22"/>
+			<target ref="id23"/>
+			<label kind="synchronisation" x="-127" y="-110">cmd_hp1?</label>
+			<label kind="assignment" x="-136" y="-136">signal_hp1 = true, signal_hp0 = false</label>
+			<nail x="-102" y="-85"/>
+		</transition>
+	</template>
+	<system>
+
+AZ_in = Achszaehler(count_in, axle_impuls_in);
+AZ_out = Achszaehler(count_out, axle_impuls_out);
+TT = TestTreiber(2, 10);
+
+system AZ_in, AZ_out, TT, Auswerteeinheit, Signal;
+
+</system>
+	<queries>
+		<query>
+			<formula>A[] (signal_hp1 imply block_free)</formula>
+			<comment>Signal zeigt Halt nur, wenn der Block frei ist, #SC1</comment>
+			<result outcome="success" type="quality" timestamp="2026-05-21 13:44:18 +0000">
+			</result>
+		</query>
+		<query>
+			<formula>A[] count_out &lt;= count_in</formula>
+			<comment>Der auszählende Achszähler ist kleiner gleich dem einzählenden Achszähler</comment>
+			<result outcome="success" type="quality" timestamp="2026-05-20 12:25:20 +0000">
+			</result>
+		</query>
+		<query>
+			<formula>A[] (block_occupied imply signal_hp0)</formula>
+			<comment>Ein belegter Block hat immer eine HP0 Signal</comment>
+			<result outcome="success" type="quality" timestamp="2026-05-20 12:25:23 +0000">
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; (block_free &amp;&amp; signal_hp1)</formula>
+			<comment>Es gibt einen Zustrand in dem der Block frei ist und das Signal auf Fahrt steht.</comment>
+			<result outcome="success" type="quality" timestamp="2026-05-20 15:37:33 +0000">
+			</result>
+		</query>
+		<query>
+			<formula>A[] (deadlock imply TT.Done)</formula>
+			<comment>Kein deadlock. </comment>
+			<result outcome="success" type="quality" timestamp="2026-05-21 13:44:53 +0000">
+			</result>
+		</query>
+	</queries>
+</nta>
